@@ -3,9 +3,10 @@ import {Text, StyleSheet, View, Image} from 'react-native';
 import {globalStyle} from '../../../styles';
 import LagacyText from '../../../components/UI/text';
 import LegacyBtn from '../../../components/UI/button';
-import {getAsyncStorage} from '../../../utils';
+import {getAsyncStorage, signOut} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {IUserInfo} from '../../../interfaces';
+import AuthGuard from '../../layout/auth-guard';
 
 const Welcome = ({navigation}) => {
   const fireIcon = require('../../../assets/fire.png');
@@ -46,7 +47,7 @@ const Welcome = ({navigation}) => {
     );
   };
 
-  const percent = 45;
+  const percent = 0;
 
   const gotoTraining = () => {
     navigation.navigate('Training');
@@ -65,91 +66,107 @@ const Welcome = ({navigation}) => {
     // console.log(user, 'user');
   };
 
-  console.log(userInfo?.user?.name, 'userInfo');
+  console.log(userInfo, 'userInfo');
   return (
-    <View style={styles.container}>
-      <View style={styles.blueBG}>
-        <View style={{...styles.bellWrap, ...styles.paddingX}}>
+    <AuthGuard navigation={navigation}>
+      <View style={styles.container}>
+        <View style={styles.blueBG}>
+          <View style={{...styles.bellWrap, ...styles.paddingX}}>
+            <LagacyText
+              color="#ffffff"
+              size="md"
+              value={`What’s up ${userInfo?.user?.name?.split(' ')[0]},`}
+              weight="bold"
+              styles={{
+                fontSize: 22,
+              }}
+            />
+
+            <Image
+              style={styles.img}
+              source={require('../../../assets/notification.png')}
+            />
+          </View>
           <LagacyText
             color="#ffffff"
             size="md"
-            value={`What’s up ${userInfo?.user?.name?.split(' ')[0]},`}
+            value="Let’s train today"
             weight="bold"
-            styles={{
-              fontSize: 22,
-            }}
+            styles={styles.paddingX}
           />
-
-          <Image
-            style={styles.img}
-            source={require('../../../assets/notification.png')}
-          />
-        </View>
-        <LagacyText
-          color="#ffffff"
-          size="md"
-          value="Let’s train today"
-          weight="bold"
-          styles={styles.paddingX}
-        />
-        <View style={{...styles.cardWrap, ...styles.paddingX}}>
-          <Card icon={fireIcon} text1="20" text2="Days Streak" sm />
-          <Card icon={coinIcon} text1="4579" text2="Coins" />
-        </View>
-      </View>
-      <View style={styles.otherArea}>
-        <View style={styles.trainingCard}>
-          <View style={styles.trainingCardImgCard}>
-            <Image
-              style={styles.trainingCardImg}
-              source={require('../../../assets/basketball.png')}
-            />
+          <View style={{...styles.cardWrap, ...styles.paddingX}}>
+            <Card icon={fireIcon} text1="0" text2="Days Streak" sm />
+            <Card icon={coinIcon} text1="0" text2="Coins" />
           </View>
-          <View style={styles.trainingCard_box2}>
-            <LagacyText
-              color="#2A2D74"
-              size="lg"
-              value="Training"
-              weight="bold"
-            />
-            <LagacyText value="Basketball is a physical contact sport, and in other to truly succeed at any level of play, you have to elevate your game." />
+        </View>
+        <View style={styles.otherArea}>
+          <View style={styles.trainingCard}>
+            <View style={styles.trainingCardImgCard}>
+              <Image
+                style={styles.trainingCardImg}
+                source={require('../../../assets/basketball.png')}
+              />
+            </View>
+            <View style={styles.trainingCard_box2}>
+              <LagacyText
+                color="#2A2D74"
+                size="lg"
+                value="Training"
+                weight="bold"
+              />
+              <LagacyText value="Basketball is a physical contact sport, and in other to truly succeed at any level of play, you have to elevate your game." />
 
-            <View style={styles.progressButtonWrap}>
-              <View style={{width: '45%'}}>
-                <View style={styles.progressBar}>
-                  <View
-                    style={{
-                      ...styles.progressWidth,
-                      width: `${percent}%`,
-                    }}></View>
+              <View style={styles.progressButtonWrap}>
+                <View style={{width: '45%'}}>
+                  <View style={styles.progressBar}>
+                    <View
+                      style={{
+                        ...styles.progressWidth,
+                        width: `${percent}%`,
+                      }}></View>
+                  </View>
+                  <LagacyText
+                    value={`${percent}% progress`}
+                    color="#D16639"
+                    weight="bold"
+                    styles={{
+                      fontSize: 10,
+                    }}
+                  />
                 </View>
-                <LagacyText
-                  value={`${percent}% progress`}
-                  color="#D16639"
-                  weight="bold"
-                  styles={{
-                    fontSize: 10,
+                <LegacyBtn
+                  bg="#2A2D74"
+                  title="Let’s Go"
+                  handlePress={gotoTraining}
+                  color="#ffffff"
+                  size={14}
+                  style={{
+                    width: 83,
+                    borderRadius: 14,
+                    padding: 0,
+                    height: 35,
                   }}
                 />
               </View>
-              <LegacyBtn
-                bg="#2A2D74"
-                title="Let’s Go"
-                handlePress={gotoTraining}
-                color="#ffffff"
-                size={14}
-                style={{
-                  width: 83,
-                  borderRadius: 14,
-                  padding: 0,
-                  height: 35,
-                }}
-              />
             </View>
           </View>
         </View>
+        {/* <LegacyBtn
+          bg="#2A2D74"
+          title="Signout"
+          handlePress={async () => await signOut()}
+          color="#ffffff"
+          size={14}
+          style={{
+            width: 83,
+            borderRadius: 14,
+            padding: 0,
+            height: 35,
+            marginRight: 20,
+          }}
+        /> */}
       </View>
-    </View>
+    </AuthGuard>
   );
 };
 

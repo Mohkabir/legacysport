@@ -5891,6 +5891,11 @@ react-native-splash-screen@^3.3.0:
   resolved "https://registry.npmjs.org/react-native-splash-screen/-/react-native-splash-screen-3.3.0.tgz"
   integrity sha512-rGjt6HkoSXxMqH4SQUJ1gnPQlPJV8+J47+4yhgTIan4bVvAwJhEeJH7wWt9hXSdH4+VfwTS0GTaflj1Tw83IhA==
 
+react-native-video@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.npmjs.org/react-native-video/-/react-native-video-6.0.0.tgz"
+  integrity sha512-G1b2L2DDbRWgyBRoQLonUEiOcsTSCfNPxGbzd6lYdhOUIyoAeBXarfFSg+89xMF6R36j7f+147FVxkjz6r60jQ==
+
 react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", react-native@>=0.57, react-native@>=0.57.0, react-native@>=0.65.0, react-native@0.74.1:
   version "0.74.1"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.74.1.tgz"

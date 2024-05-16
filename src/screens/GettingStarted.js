@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import LegacyBtn from '../components/UI/button';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import { signOut } from '../utils';
 
 const GettingStarted = ({login}) => {
   const [current, setCurrent] = useState(0);
@@ -21,16 +22,6 @@ const GettingStarted = ({login}) => {
     },
   ];
 
-  const signOut = async () => {
-    GoogleSignin.configure();
-    try {
-      const res = await GoogleSignin.signOut();
-      // setState({user: null});
-      console.log(res, 'res---');
-    } catch (error) {
-      console.error(error);
-    }
-  };
   const handleNext = async () => {
     await signOut();
     if (current === 2) {

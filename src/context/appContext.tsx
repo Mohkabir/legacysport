@@ -34,6 +34,7 @@ const AppProvider = ({children}) => {
         handleFinishDrill,
         updateCurrentContents,
         currentContents,
+        setContents,
       }}>
       <>{children}</>
     </AppContext.Provider>

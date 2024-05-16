@@ -1,17 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {
   Image,
-  Text,
   View,
   StyleSheet,
   ImageBackground,
   Pressable,
+  Alert,
 } from 'react-native';
 
 import LegacyBtn from '../../components/UI/button';
-import Input from '../../components/UI/Input';
 import LagacyText from '../../components/UI/text';
-import {globalStyle} from '../../styles';
 
 import {
   GoogleSignin,
@@ -43,23 +41,6 @@ const Auth = ({setIsAuth}: AuthProps) => {
     {title: 'Log In', content: 'Select an option'},
   ];
 
-  console.log(userInfo, 'userInfo');
-
-  const getCurrentUserInfo = async () => {
-    try {
-      const userInfo = await GoogleSignin.signInSilently();
-      console.log(userInfo, 'is signed in userInfo...');
-      setUserInfo(userInfo);
-    } catch (error: any) {
-      if (error.code === statusCodes.SIGN_IN_REQUIRED) {
-        // user has not signed in yet
-        console.log('user has not signed in yet...');
-      } else {
-        // some other error
-      }
-    }
-  };
-
   const isSignedIn = async () => {
     const isSignedIn = await GoogleSignin.isSignedIn();
     console.log(isSignedIn, 'isSignedIn');
@@ -69,9 +50,34 @@ const Auth = ({setIsAuth}: AuthProps) => {
     isSignedIn();
   }, []);
 
-  // const saveUser = async (data: any) => {
-  //   await AsyncStorage.setItem('user', JSON.stringify(data));
-  // };
+  const getSignedToken = async (userData: any) => {
+    try {
+      const payload = {
+        email: userData?.user?.email,
+        displayName: userData?.user?.displayName,
+      };
+
+      const response = await fetch(
+        'https://legacy-backend-zmmd.onrender.com/user/createUser',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        },
+      );
+      if (!response.ok) {
+        console.log(response, 'response error');
+        // throw new Error('Failed to send data to backend');
+      }
+      const data = await response.json();
+      console.log('Data sent to backend:', data, 'token:', data.token);
+      await saveAsyncStorage('token', data.token);
+    } catch (error) {
+      console.error('Error sending data to backend:', error);
+    }
+  };
 
   const signIn = async () => {
     try {
@@ -84,21 +90,28 @@ const Auth = ({setIsAuth}: AuthProps) => {
       setUserInfo(data);
       saveAsyncStorage('user', data);
       setIsAuth();
+      console.log('getting token...');
+      await getSignedToken(data);
     } catch (error: any) {
       if (error?.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log('user cancelled the login flow', JSON.stringify(error));
+        console.log('User cancelled the login flow', JSON.stringify(error));
+
+        Alert.alert('Error', 'User cancelled the login flow. Please try again');
       } else if (error?.code === statusCodes.IN_PROGRESS) {
         console.log(
           'operation (e.g. sign in) is in progress already',
           JSON.stringify(error),
         );
+        Alert.alert('Error', 'Operation (e.g. sign in) is in progress already');
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         console.log(
           'play services not available or outdated',
           JSON.stringify(error),
         );
+        Alert.alert('Error', 'Play services not available or outdated');
       } else {
         console.log('some other error happened', JSON.stringify(error));
+        Alert.alert('Error', 'Something went wrong. Please try again.');
       }
     }
   };
@@ -150,13 +163,6 @@ const Auth = ({setIsAuth}: AuthProps) => {
                     // setIsAuth()
                   }}
                   icon={GoogleIcon}
-                />
-                <LegacyBtn
-                  bg="#000000"
-                  color="#ffffff"
-                  title="Continue with Apple"
-                  handlePress={() => setIsAuth()}
-                  icon={AppleIcon}
                 />
               </View>
               <View style={styles.authSwitchWrap}>

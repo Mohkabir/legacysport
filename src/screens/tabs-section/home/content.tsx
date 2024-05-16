@@ -16,11 +16,7 @@ const Contents = ({navigation}) => {
   const bgImage = require('../../../assets/gettingStarted3.png');
   const backIcon = require('../../../assets/back.png');
 
-  const {
-    contents: drillsData,
-    updateCurrentContents,
-    currentContents,
-  } = useContext(AppContext);
+  const {contents: drillsData, updateCurrentContents} = useContext(AppContext);
 
   const handleGoBack = () => {
     console.log('traininggggg..');
@@ -31,7 +27,7 @@ const Contents = ({navigation}) => {
     updateCurrentContents(data);
     navigation.navigate('Start contents');
   };
-
+  console.log(drillsData, 'drillsData');
   return (
     <View style={styles.container}>
       <View style={styles.blueBG}>
@@ -60,12 +56,12 @@ const Contents = ({navigation}) => {
         {drillsData &&
           drillsData.map((drill, idx) => (
             <View style={styles.mainContents} key={idx}>
-              <View style={{flex: 0.7}}>
-                <Image style={styles.img} source={drill?.thumbnail} />
+              <View style={styles.img_wrap}>
+                <Image style={styles.img} source={{uri: drill?.imgUrl}} />
               </View>
               <View style={styles.card2}>
                 <LagacyText
-                  value={drill?.title}
+                  value={drill?.displayName}
                   // weight="bold"
                   styles={{
                     fontSize: 14,
@@ -90,7 +86,6 @@ const Contents = ({navigation}) => {
                   color="#ffffff"
                   size={12}
                   style={{
-                    // width: 83,
                     borderRadius: 14,
                     padding: 0,
                     height: 40,
@@ -161,9 +156,14 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     height: 85,
   },
+
+  img_wrap: {
+    flex: 0.7,
+    borderRadius: 17,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.3)',
+  },
   img: {
-    // borderWidth: 2,
-    // borderColor: "red",
     height: '95%',
     width: '100%',
   },

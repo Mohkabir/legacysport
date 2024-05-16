@@ -1,33 +1,25 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {
-  Text,
-  StyleSheet,
-  View,
-  Image,
-  Pressable,
-  ScrollView,
-} from 'react-native';
-import {globalStyle} from '../../../styles';
+import {StyleSheet, View, Image, Pressable} from 'react-native';
 import LagacyText from '../../../components/UI/text';
 import LegacyBtn from '../../../components/UI/button';
-// import {Video} from 'expo-av';
+import Video from 'react-native-video';
 import {AppContext} from '../../../context/appContext';
 
 const StartContents = ({navigation}) => {
   const bgImage = require('../../../assets/gettingStarted3.png');
   const backIcon = require('../../../assets/back.png');
 
-  const {handleFinishDrill, currentContents} = useContext(AppContext);
+  const {handleFinishDrill, currentContents, contents} = useContext(AppContext);
 
   const percent = 45;
   const [countdownToStart, setcountdownToStart] = useState(3);
 
   const video = React.useRef(null);
   const [minutes, setMinutes] = useState(
-    Number(currentContents.duration.minutes),
+    Number(currentContents?.duration?.minutes || 10),
   );
   const [seconds, setSeconds] = useState(
-    Number(currentContents.duration.seconds),
+    Number(currentContents?.duration?.seconds || 10),
   );
 
   const [started, setStarted] = useState(false);
@@ -102,14 +94,19 @@ const StartContents = ({navigation}) => {
 
       <View style={styles.blueBG}>
         {/* <Image style={styles.bgImgStyle} source={bgImage} /> */}
-        {/* <Video
+        <Video
           ref={video}
           style={styles.video}
-          source={require('../../../assets/video/ball_slaps1.mp4')}
-          resizeMode="contain"
-          shouldPlay={startVideo}
-          isLooping={isLooping}
-        /> */}
+          // source={currentContents?.videoUrl}
+          // source={require('../../../assets/video/ball_slaps1.mp4')}
+          // source="https://res.cloudinary.com/dmvvb4t5w/video/upload/v1715856378/ball_slaps1_cnexsu.mp4"
+          source={{
+            uri: currentContents?.videoUrl,
+          }}
+          paused={!startVideo}
+          repeat={isLooping}
+        />
+
         <View style={styles.bgTextStyleWrap}>
           <Pressable onPress={handleGoBack}>
             <Image source={backIcon} />
@@ -120,13 +117,13 @@ const StartContents = ({navigation}) => {
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <LagacyText
             color="#19212680"
-            value="1/5"
+            value={`1/${contents.length}`}
             styles={{
               fontSize: 16,
             }}
           />
           <LagacyText
-            value={currentContents.title}
+            value={currentContents?.displayName}
             weight="bold"
             styles={{
               fontSize: 30,

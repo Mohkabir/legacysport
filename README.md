@@ -77,3 +77,13 @@ To learn more about React Native, take a look at the following resources:
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+
+# to build android apk 
+cd android
+./gradlew assembleRelease
+
+dev
+SHA1: 5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25
+
+release
+SHA1: 9A:17:73:42:55:65:29:66:5E:60:7F:E2:1A:EE:48:6C:50:2E:F4:37

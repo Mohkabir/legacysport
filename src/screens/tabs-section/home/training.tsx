@@ -1,10 +1,7 @@
-import {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Image, StyleSheet, Pressable, ScrollView, View} from 'react-native';
 import LagacyText from '../../../components/UI/text';
 import {globalStyle} from '../../../styles';
-// import LegacyBtn from "../../components/UI/button";
-// import LagacyText from "../../components/UI/text";
-// import { globalStyle } from "../../styles";
 import LoadingContents from './loading-contents';
 import GoBack from '../../../components/UI/go-back';
 import {AppContext} from '../../../context/appContext';
@@ -57,12 +54,6 @@ export default function Training({navigation}) {
             }}
             onPress={() => handleTraining(item)}
             key={idx}>
-            {/* <LinearGradient
-              colors={['#0A101F', '#2A2D74']}
-              start={[0, 0]}
-              end={[1, 1]}
-              style={styles.gradient}
-            /> */}
             <View style={styles.box1}>
               <LagacyText
                 size="lg"
@@ -70,7 +61,6 @@ export default function Training({navigation}) {
                 value={item.title}
                 styles={{
                   marginBottom: 5,
-
                   color: selected?.tag === idx ? '#ffffff' : '#2A2D74',
                 }}
               />

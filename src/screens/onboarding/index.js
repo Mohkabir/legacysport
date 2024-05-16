@@ -12,7 +12,7 @@ export default function Onboarding({navigation}) {
   const [isGetStarted, setIsGetStarted] = useState(
     getAsyncStorage('isGetStarted') || false,
   );
-  const [isAuth, setIsAuth] = useState(false);
+  const [isAuth, setIsAuth] = useState(getAsyncStorage('isAuth') || false);
 
   const endLoading = () => {
     setloading(false);
@@ -28,14 +28,18 @@ export default function Onboarding({navigation}) {
 
   const isSignedIn = async () => {
     const isSignedIn = await GoogleSignin.isSignedIn();
+
     setIsAuth(isSignedIn);
+    saveAsyncStorage('isAUth', isSignedIn);
     console.log(isSignedIn, 'isSignedIn');
+
+    if (!isSignedIn) {
+    }
   };
   useEffect(() => {
     isSignedIn();
   }, []);
 
-  // getItem();
   useEffect(() => {
     saveAsyncStorage('isGetStarted', isGetStarted);
   }, [isGetStarted]);
@@ -44,12 +48,24 @@ export default function Onboarding({navigation}) {
     GoogleSignin.configure();
     try {
       const res = await GoogleSignin.signOut();
-      // setState({user: null});
       console.log(res, 'res---');
     } catch (error) {
       console.error(error);
     }
   };
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await getAsyncStorage('token');
+
+      if (token) {
+        setIsAuth(true);
+      } else {
+        setIsAuth(false);
+        signOut();
+      }
+    };
+    checkToken();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -57,9 +73,7 @@ export default function Onboarding({navigation}) {
       {!isGetStarted && !loading && (
         <GettingStarted login={() => setIsGetStarted(true)} />
       )}
-      {isGetStarted && !loading && !isAuth && (
-        <Auth setIsAuth={() => setIsAuth(true)} />
-      )}
+      {!loading && !isAuth && <Auth setIsAuth={() => setIsAuth(true)} />}
       {isGetStarted && !loading && isAuth && (
         <AcountSetup handleFinishOnboard={handleFinishOnboard} />
       )}
