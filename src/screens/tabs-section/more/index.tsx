@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, StyleSheet, View} from 'react-native';
-import {globalStyle} from '../../styles';
+import {globalStyle} from '../../../styles';
 
 const More = () => {
   return (

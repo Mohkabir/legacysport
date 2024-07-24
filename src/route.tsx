@@ -1,13 +1,10 @@
 import React from 'react';
-// import {StatusBar} from 'expo-status-bar';
 import Onboarding from './screens/onboarding';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Text, View} from 'react-native';
+import {Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
-
-import Home from './screens/tabs-section/home/training';
 import League from './screens/tabs-section/league';
-import More from './screens/tabs-section/more';
+import More from './screens/tabs-section/more/index.tsx';
 import Store from './screens/tabs-section/store';
 import Welcome from './screens/tabs-section/home/welcome';
 import Training from './screens/tabs-section/home/training';
