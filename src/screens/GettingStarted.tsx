@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import LegacyBtn from '../components/UI/button';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import { signOut } from '../utils';
+// import {signOut} from '../utils';
 
-const GettingStarted = ({login}) => {
+const GettingStarted = ({goToLogin}) => {
   const [current, setCurrent] = useState(0);
 
   const steps = [
@@ -23,9 +22,9 @@ const GettingStarted = ({login}) => {
   ];
 
   const handleNext = async () => {
-    await signOut();
+    // await signOut();
     if (current === 2) {
-      login();
+      goToLogin();
     } else {
       setCurrent(prev => prev + 1);
     }
@@ -86,14 +85,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 0,
     paddingTop: 40,
-    // marginTop: 40,
   },
   boxOne: {
-    // borderWidth: 2,
-    // borderColor: "green",
     flex: 3,
     justifyContent: 'space-between',
-    alignItems: 'space-between',
+    // alignItems: 'space-between',
   },
   textContainer: {
     display: 'flex',
@@ -121,7 +117,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 38,
-    display: 'inline',
+    // display: 'inline',
   },
   imgCard: {
     maxWidth: '100%',

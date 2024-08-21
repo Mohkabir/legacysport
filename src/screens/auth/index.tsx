@@ -1,23 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   View,
   StyleSheet,
   ImageBackground,
   Pressable,
-  Alert,
 } from 'react-native';
 
 import LegacyBtn from '../../components/UI/button';
 import LagacyText from '../../components/UI/text';
 
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {saveAsyncStorage} from '../../utils';
 import {IUserInfo} from '../../interfaces';
+import {handleError} from '../../utils/error';
+import {getSignedToken} from '../../actions/auth';
 
 interface AuthProps {
   setIsAuth: any;
@@ -41,43 +38,13 @@ const Auth = ({setIsAuth}: AuthProps) => {
     {title: 'Log In', content: 'Select an option'},
   ];
 
-  const isSignedIn = async () => {
-    const isSignedIn = await GoogleSignin.isSignedIn();
-    console.log(isSignedIn, 'isSignedIn');
-    // setState({isLoginScreenPresented: !isSignedIn});
-  };
-  useEffect(() => {
-    isSignedIn();
-  }, []);
-
-  const getSignedToken = async (userData: any) => {
-    try {
-      const payload = {
-        email: userData?.user?.email,
-        displayName: userData?.user?.displayName,
-      };
-
-      const response = await fetch(
-        'https://legacy-backend-zmmd.onrender.com/user/createUser',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        },
-      );
-      if (!response.ok) {
-        console.log(response, 'response error');
-        // throw new Error('Failed to send data to backend');
-      }
-      const data = await response.json();
-      console.log('Data sent to backend:', data, 'token:', data.token);
-      await saveAsyncStorage('token', data.token);
-    } catch (error) {
-      console.error('Error sending data to backend:', error);
-    }
-  };
+  // const isSignedIn = async () => {
+  //   const isSignedIn = await GoogleSignin.isSignedIn();
+  //   console.log(isSignedIn, 'isSignedIn');
+  // };
+  // useEffect(() => {
+  //   isSignedIn();
+  // }, []);
 
   const signIn = async () => {
     try {
@@ -88,31 +55,15 @@ const Auth = ({setIsAuth}: AuthProps) => {
           '434340160141-6thi8u8tnm19h56padkjma9rrs8fsiqu.apps.googleusercontent.com',
       });
       setUserInfo(data);
-      saveAsyncStorage('user', data);
-      setIsAuth();
       console.log('getting token...');
-      await getSignedToken(data);
-    } catch (error: any) {
-      if (error?.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log('User cancelled the login flow', JSON.stringify(error));
-
-        Alert.alert('Error', 'User cancelled the login flow. Please try again');
-      } else if (error?.code === statusCodes.IN_PROGRESS) {
-        console.log(
-          'operation (e.g. sign in) is in progress already',
-          JSON.stringify(error),
-        );
-        Alert.alert('Error', 'Operation (e.g. sign in) is in progress already');
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log(
-          'play services not available or outdated',
-          JSON.stringify(error),
-        );
-        Alert.alert('Error', 'Play services not available or outdated');
-      } else {
-        console.log('some other error happened', JSON.stringify(error));
-        Alert.alert('Error', 'Something went wrong. Please try again.');
+      const res = await getSignedToken(data);
+      if (res?.error) {
+        throw new Error(res.error);
       }
+      await saveAsyncStorage('user', data);
+      setIsAuth();
+    } catch (error: any) {
+      handleError(error);
     }
   };
   return (
@@ -126,7 +77,7 @@ const Auth = ({setIsAuth}: AuthProps) => {
               source={require('../../assets/logo.png')}
             />
             <Image
-              style={styles.imgText}
+              // style={styles.imgText}
               source={require('../../assets/legacy-white.png')}
             />
           </View>
@@ -195,11 +146,7 @@ const Auth = ({setIsAuth}: AuthProps) => {
 
 const styles = StyleSheet.create({
   wrap: {
-    // borderWidth: 2,
-    // borderColor: "blue",
-    // backgroundColor: "red",
     flex: 1,
-    // paddingTop: 60,
   },
   image: {
     flex: 1,

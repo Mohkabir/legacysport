@@ -1,19 +1,21 @@
-import {useContext, useEffect, useState} from 'react';
-import {
-  Image,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-  View,
-  Alert,
-} from 'react-native';
-import Modal from 'react-native-modal';
+import {useContext, useEffect} from 'react';
+import {Image, StyleSheet, Pressable, View, Alert} from 'react-native';
 import LagacyText from '../../../components/UI/text';
-import {globalStyle} from '../../../styles';
 import {getAsyncStorage, signOut} from '../../../utils';
 import {AppContext} from '../../../context/appContext';
+import {NavigationProp} from '@react-navigation/native';
 
-export default function LoadingContents({handleBack, navigation, goto}) {
+interface LoadingContentsProps {
+  handleBack: () => void;
+  navigation: NavigationProp<any>;
+  goto: string;
+}
+
+const LoadingContents: React.FC<LoadingContentsProps> = ({
+  handleBack,
+  navigation,
+  goto,
+}) => {
   const loaderImg = require('../../../assets/loaderImg.png');
   const close = require('../../../assets/close.png');
 
@@ -23,16 +25,7 @@ export default function LoadingContents({handleBack, navigation, goto}) {
     navigation.navigate(goto);
   };
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     handleGoToContent();
-  //   }, 3000);
-
-  //   return () => clearTimeout(timer);
-  // }, []);
-
   useEffect(() => {
-    // isSignedIn();
     getContents();
   }, []);
 
@@ -41,7 +34,7 @@ export default function LoadingContents({handleBack, navigation, goto}) {
     console.log('before getting contents, token: ', token);
     try {
       const response = await fetch(
-        'https://legacy-backend-zmmd.onrender.com/training/allExercise?trainingSection=Drills&skillLevel=Intermediate',
+        'https://legacy-backend-zmmd.onrender.com/training/allExercise?skillLevel=Beginner&trainingSection=Exercise&day=1',
         {
           method: 'GET',
           headers: {
@@ -50,39 +43,43 @@ export default function LoadingContents({handleBack, navigation, goto}) {
           },
         },
       );
-      if (!response.ok) {
-        console.log(response, 'response error');
-      }
       const data = await response.json();
 
-      if (data?.statusCode === 401) {
-        Alert.alert(
-          'Session expired',
-          'Please login again',
-          [
-            {
-              text: 'Login',
-              onPress: async () => {
-                await signOut();
-                navigation.navigate('onboarding');
+      if (!response.ok) {
+        console.log(response, 'response error');
+        if (data?.statusCode === 401 || data?.statusCode === 403) {
+          Alert.alert(
+            'Session expired',
+            'Please login again',
+            [
+              {
+                text: 'Login',
+                onPress: async () => {
+                  await signOut();
+                  navigation.navigate('onboarding');
+                },
               },
-            },
-          ],
-          {cancelable: false},
-        );
-        handleBack();
+            ],
+            {cancelable: false},
+          );
+          handleBack();
+          return;
+        }
+        return;
       }
+      console.log(data, 'data data');
+
       if (data[0]?.trainingDescription) {
         setContents(data[0]?.trainingDescription);
-        console.log(' Contents sent to backend:', data);
+        console.log('Contents sent to backend:', data);
         console.log(data[0]?.trainingDescription, 'data?.trainingDescription');
         handleGoToContent();
       } else {
         handleBack();
       }
-    } catch (error) {
+    } catch (error: any) {
       handleBack();
-      if (error.statusCode === 401) {
+      if (error?.statusCode === 401) {
         Alert.alert('Session expired', 'Please login again');
       } else {
         Alert.alert(
@@ -95,7 +92,7 @@ export default function LoadingContents({handleBack, navigation, goto}) {
   };
 
   return (
-    <View style={{...styles.container}}>
+    <View style={styles.container}>
       <View>
         <Pressable onPress={handleBack}>
           <Image source={close} />
@@ -128,7 +125,7 @@ export default function LoadingContents({handleBack, navigation, goto}) {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -145,10 +142,10 @@ const styles = StyleSheet.create({
   imgBox: {
     alignItems: 'center',
     paddingTop: 60,
-    // width: 200,
-    // height: 400,
   },
   textBox: {
     alignItems: 'center',
   },
 });
+
+export default LoadingContents;

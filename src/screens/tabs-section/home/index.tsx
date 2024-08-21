@@ -1,19 +1,29 @@
 import React, {useEffect, useState} from 'react';
-import {Text, StyleSheet, View, Image} from 'react-native';
-import {globalStyle} from '../../../styles';
+import {StyleSheet, View, Image} from 'react-native';
 import LagacyText from '../../../components/UI/text';
 import LegacyBtn from '../../../components/UI/button';
-import {getAsyncStorage, signOut} from '../../../utils';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getAsyncStorage} from '../../../utils';
 import {IUserInfo} from '../../../interfaces';
 import AuthGuard from '../../layout/auth-guard';
+import {NavigationProp} from '@react-navigation/native';
 
-const Welcome = ({navigation}) => {
+interface WelcomeProps {
+  navigation: NavigationProp<any>;
+}
+
+interface CardProps {
+  icon: any;
+  text1: string;
+  text2: string;
+  sm?: boolean;
+}
+
+const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
   const fireIcon = require('../../../assets/fire.png');
   const coinIcon = require('../../../assets/coin.png');
   const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
 
-  const Card = ({icon, text1, text2, sm}) => {
+  const Card: React.FC<CardProps> = ({icon, text1, text2, sm}) => {
     return (
       <View style={styles.card}>
         <Image
@@ -54,16 +64,12 @@ const Welcome = ({navigation}) => {
   };
 
   useEffect(() => {
-    getStorate();
+    getStorage();
   }, []);
 
-  // const user = getAsyncStorage('user');
-
-  const getStorate = async () => {
+  const getStorage = async () => {
     const user = await getAsyncStorage('user');
     setUserInfo(user);
-    // const user = await AsyncStorage.getItem('user');
-    // console.log(user, 'user');
   };
 
   console.log(userInfo, 'userInfo');
@@ -82,10 +88,7 @@ const Welcome = ({navigation}) => {
               }}
             />
 
-            <Image
-              style={styles.img}
-              source={require('../../../assets/notification.png')}
-            />
+            <Image source={require('../../../assets/notification.png')} />
           </View>
           <LagacyText
             color="#ffffff"
@@ -151,20 +154,6 @@ const Welcome = ({navigation}) => {
             </View>
           </View>
         </View>
-        {/* <LegacyBtn
-          bg="#2A2D74"
-          title="Signout"
-          handlePress={async () => await signOut()}
-          color="#ffffff"
-          size={14}
-          style={{
-            width: 83,
-            borderRadius: 14,
-            padding: 0,
-            height: 35,
-            marginRight: 20,
-          }}
-        /> */}
       </View>
     </AuthGuard>
   );
@@ -184,8 +173,6 @@ const styles = StyleSheet.create({
   },
   otherArea: {
     flex: 1,
-    // borderWidth: 2,
-    // borderColor: "red",
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -195,7 +182,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 60,
   },
-
   paddingX: {
     paddingLeft: 20,
     paddingRight: 20,
@@ -211,24 +197,15 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   card: {
-    // borderWidth: 2,
-    // borderColor: "red",
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '47%',
     padding: 15,
-    // paddingTop: 25,
-    // paddingBottom: 25,
     backgroundColor: 'rgba(225,225,225,0.4)',
     borderRadius: 10,
   },
-  cardImg: {
-    // minwidth: 40,
-    // minheight: 40,
-    // maxwidth: 40,
-    // maxheight: 40,
-  },
+  cardImg: {},
   cardText: {},
   textCenter: {
     textAlign: 'center',
@@ -259,8 +236,6 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   progressButtonWrap: {
-    // borderWidth: 2,
-    // borderColor: "red",
     marginTop: 20,
     alignItems: 'center',
     flexDirection: 'row',

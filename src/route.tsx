@@ -6,7 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import League from './screens/tabs-section/league';
 import More from './screens/tabs-section/more/index.tsx';
 import Store from './screens/tabs-section/store';
-import Welcome from './screens/tabs-section/home/welcome';
+import Welcome from './screens/tabs-section/home/index.tsx';
 import Training from './screens/tabs-section/home/training';
 import Contents from './screens/tabs-section/home/content';
 import StartContents from './screens/tabs-section/home/start-contents';
