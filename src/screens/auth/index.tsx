@@ -15,6 +15,8 @@ import {saveAsyncStorage} from '../../utils';
 import {IUserInfo} from '../../interfaces';
 import {handleError} from '../../utils/error';
 import {getSignedToken} from '../../actions/auth';
+import {asyncStorageKeys} from '../../constants';
+import Spinner from '../../components/UI/spinner';
 
 interface AuthProps {
   setIsAuth: any;
@@ -23,8 +25,10 @@ interface AuthProps {
 const Auth = ({setIsAuth}: AuthProps) => {
   const bgImage = require('../../assets/gettingStarted1.png');
   const GoogleIcon = require('../../assets/google-icon.png');
-  const AppleIcon = require('../../assets/apple-icon.png');
+  // const AppleIcon = require('../../assets/apple-icon.png');
   const [tab, setTab] = useState(0);
+
+  const [loading, setLoading] = useState(false);
 
   const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
 
@@ -38,14 +42,6 @@ const Auth = ({setIsAuth}: AuthProps) => {
     {title: 'Log In', content: 'Select an option'},
   ];
 
-  // const isSignedIn = async () => {
-  //   const isSignedIn = await GoogleSignin.isSignedIn();
-  //   console.log(isSignedIn, 'isSignedIn');
-  // };
-  // useEffect(() => {
-  //   isSignedIn();
-  // }, []);
-
   const signIn = async () => {
     try {
       GoogleSignin.configure();
@@ -56,11 +52,13 @@ const Auth = ({setIsAuth}: AuthProps) => {
       });
       setUserInfo(data);
       console.log('getting token...');
+      setLoading(true);
       const res = await getSignedToken(data);
+      setLoading(false);
       if (res?.error) {
         throw new Error(res.error);
       }
-      await saveAsyncStorage('user', data);
+      await saveAsyncStorage(asyncStorageKeys.USER, data);
       setIsAuth();
     } catch (error: any) {
       handleError(error);
@@ -69,6 +67,11 @@ const Auth = ({setIsAuth}: AuthProps) => {
   return (
     <View style={{...styles.wrap}}>
       <ImageBackground source={bgImage} resizeMode="cover" style={styles.image}>
+        {loading && (
+          <View style={styles.load}>
+            <Spinner />
+          </View>
+        )}
         <View style={styles.overlay}></View>
         <View style={styles.contents}>
           <View style={styles.logoWrapper}>
@@ -154,8 +157,6 @@ const styles = StyleSheet.create({
     height: '104%',
   },
   contents: {
-    // borderWidth: 2,
-    // borderColor: "blue",
     width: '90%',
     marginLeft: 'auto',
     marginRight: 'auto',
@@ -177,6 +178,25 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: 'rgba(0,0,0,0.4)',
+    // borderWidth: 2,
+    // borderColor: 'blue',
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  load: {
+    position: 'absolute',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    top: 0,
+    width: '100%',
+    height: '100%',
+    color: 'red',
+    fontSize: 40,
+    zIndex: 20,
+    textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
   },
   btnGroup: {
     marginTop: 40,

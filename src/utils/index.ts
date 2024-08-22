@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {asyncStorageKeys} from '../constants';
 
 export const saveAsyncStorage = async (key: string, data: any) => {
   try {
@@ -37,10 +38,9 @@ export const signOut = async () => {
   GoogleSignin.configure();
   try {
     await deleteAsyncStorage('token');
-    await deleteAsyncStorage('isAUth');
+    // await deleteAsyncStorage('isAUth');
+    await saveAsyncStorage(asyncStorageKeys.ISAUTH, false);
     await GoogleSignin.signOut();
-    await AsyncStorage.clear();
-    console.log(viewAsyncStorage(), ' viewAsyncStorage');
   } catch (error) {
     console.error('Error during sign out:', error);
   }

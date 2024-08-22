@@ -1,14 +1,9 @@
-import React, {useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import {Image, StyleSheet, View} from 'react-native';
 
 const SplashSreen = () => {
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.imgText}>Logo</Text>
-      <Text style={styles.imgText}>Logo</Text>
-      <Text style={styles.imgText}>Logo</Text>
-      <Text style={styles.imgText}>Logo</Text> */}
-
       <View style={styles.logoWrapper}>
         <Image source={require('../assets/logo.png')} />
         <Image

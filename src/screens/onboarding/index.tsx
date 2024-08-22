@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Auth from '../auth';
-import GettingStarted from '../GettingStarted';
+import GettingStarted from '../getting-started';
 import AcountSetup from '../account-setup';
-import SplashSreen from '../SplashSreen';
+import SplashSreen from '../splash-sreen';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {
   getAsyncStorage,
@@ -12,6 +12,7 @@ import {
   viewAsyncStorage,
 } from '../../utils';
 import {NavigationProp} from '@react-navigation/native';
+import {appRoutes, asyncStorageKeys} from '../../constants';
 
 export default function Onboarding({
   navigation,
@@ -26,8 +27,8 @@ export default function Onboarding({
 
   const handleFinishOnboard = useCallback(async () => {
     console.log('going... home');
-    await saveAsyncStorage('isOnboarded', true);
-    navigation.navigate('Back home');
+    await saveAsyncStorage(asyncStorageKeys.ISONBOARDED, true);
+    navigation.navigate(appRoutes.BACKHOME);
   }, [navigation]);
 
   const endLoading = () => {
@@ -39,23 +40,24 @@ export default function Onboarding({
 
   useEffect(() => {
     const checkToken = async () => {
-      const getIsGetStarted = (await getAsyncStorage('isGetStarted')) || true;
+      const getIsGetStarted =
+        (await getAsyncStorage(asyncStorageKeys.ISGETSTARTED)) || true;
       setIsGetStarted(getIsGetStarted);
-      await saveAsyncStorage('isGetStarted', getIsGetStarted);
-      const token = await getAsyncStorage('token');
-      const isOnboard = await getAsyncStorage('isOnboarded');
+      await saveAsyncStorage(asyncStorageKeys.ISGETSTARTED, getIsGetStarted);
+      const token = await getAsyncStorage(asyncStorageKeys.TOKEN);
+      const isOnboard = await getAsyncStorage(asyncStorageKeys.ISONBOARDED);
       setIsOnboarded(() => isOnboard);
       const isSignedIn = await GoogleSignin.isSignedIn();
 
       if (token && isSignedIn) {
         setIsAuth(true);
-        await saveAsyncStorage('isAUth', true);
+        await saveAsyncStorage(asyncStorageKeys.ISAUTH, true);
         if (isOnboarded) {
-          navigation.navigate('Back home');
+          navigation.navigate(appRoutes.BACKHOME);
         }
       } else {
         setIsAuth(false);
-        await saveAsyncStorage('isAUth', false);
+        await saveAsyncStorage(asyncStorageKeys.ISAUTH, false);
         signOut();
       }
       getAss();
@@ -70,7 +72,7 @@ export default function Onboarding({
 
   const finishGetStarted = async () => {
     console.log('saving isGetStarted to storage');
-    await saveAsyncStorage('isGetStarted', false);
+    await saveAsyncStorage(asyncStorageKeys.ISGETSTARTED, false);
     setIsGetStarted(false);
     getAss();
   };
@@ -90,7 +92,7 @@ export default function Onboarding({
       {!isOnboarded && !loading && isAuth && (
         <AcountSetup handleFinishOnboard={handleFinishOnboard} />
       )}
-      <Text>Testingg</Text>
+      {/* <Text>Testingg</Text> */}
     </View>
   );
 }

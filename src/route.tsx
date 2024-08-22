@@ -11,22 +11,22 @@ import Training from './screens/tabs-section/home/training';
 import Contents from './screens/tabs-section/home/content';
 import StartContents from './screens/tabs-section/home/start-contents';
 import StartLoader from './screens/tabs-section/home/start-loading';
+import {appRoutes} from './constants/index.ts';
 // import {Ionicons} from '@expo/vector-icons';
 
 export default function Route() {
   const Stack = createStackNavigator();
   const Tab = createBottomTabNavigator();
   const MainApp = () => {
-    const activeColor = '#2A2D74';
-
-    const checkActive = focused => {
+    // const activeColor = '#2A2D74';
+    const checkActive = (focused: any) => {
       return focused ? '#2A2D74' : 'gray';
     };
 
     return (
       <Tab.Navigator>
         <Tab.Screen
-          name="Home"
+          name={appRoutes.HOME}
           component={Welcome}
           options={{
             headerShown: false,
@@ -39,7 +39,7 @@ export default function Route() {
           }}
         />
         <Tab.Screen
-          name="store"
+          name={appRoutes.STORE}
           component={Store}
           options={{
             headerShown: false,
@@ -52,7 +52,7 @@ export default function Route() {
           }}
         />
         <Tab.Screen
-          name="league"
+          name={appRoutes.LEAGUE}
           component={League}
           options={{
             headerShown: false,
@@ -65,7 +65,7 @@ export default function Route() {
           }}
         />
         <Tab.Screen
-          name="more"
+          name={appRoutes.MORE}
           component={More}
           options={{
             headerShown: false,
@@ -88,35 +88,35 @@ export default function Route() {
   return (
     <Stack.Navigator initialRouteName="onboarding">
       <Stack.Screen
-        name="onboarding"
+        name={appRoutes.ONBOARDING}
         component={Onboarding}
         options={{
           headerShown: false,
         }}
       />
       <Stack.Screen
-        name="Back home"
+        name={appRoutes.BACKHOME}
         component={MainApp}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Training"
+        name={appRoutes.TRAINING}
         component={Training}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Start Loader"
+        name={appRoutes.STARTLOADER}
         component={StartLoader}
         options={{headerShown: false}}
       />
 
       <Stack.Screen
-        name="Contents"
+        name={appRoutes.CONTENTS}
         component={Contents}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Start contents"
+        name={appRoutes.STARTCONTENTS}
         component={StartContents}
         options={{headerShown: false}}
       />

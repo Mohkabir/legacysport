@@ -1,43 +1,61 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Image, StyleSheet, Pressable, ScrollView, View} from 'react-native';
 import LagacyText from '../../../components/UI/text';
 import {globalStyle} from '../../../styles';
-import LoadingContents from './loading-contents';
 import GoBack from '../../../components/UI/go-back';
-import {AppContext} from '../../../context/appContext';
+import {appRoutes, asyncStorageKeys} from '../../../constants';
+import {getAsyncStorage, saveAsyncStorage} from '../../../utils';
+
 const BeginnerImg1 = require('../../../assets/skill1.png');
 const BeginnerImg2 = require('../../../assets/skill2.png');
 const BeginnerImg3 = require('../../../assets/skill3.png');
 
-export default function Training({navigation}) {
-  const [selected, setSelected] = useState(1);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+interface TrainingItem {
+  title: string;
+  text: string;
+  img: any;
+  tag: number;
+  value: string;
+}
 
-  const trainingData = [
+export default function Training({navigation}: {navigation: any}) {
+  const [selected, setSelected] = useState<TrainingItem | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  console.log(isModalVisible, 'isModalVisible');
+
+  const trainingData: TrainingItem[] = [
     {
       title: 'Exercise',
       text: 'Improve body conditioning and overall fitness.',
       img: BeginnerImg1,
       tag: 0,
+      value: 'Exercise',
     },
     {
       title: 'Drills',
       text: 'Warm-up exercises get your muscles and joints ready for action',
       img: BeginnerImg2,
       tag: 1,
+      value: 'Drills',
     },
     {
       title: 'Moves',
       text: 'Get ahead in the game, unlock tip and tricks that will level you up',
       img: BeginnerImg3,
       tag: 2,
+      value: 'Moves',
     },
   ];
 
-  const handleTraining = val => {
+  const handleTraining = async (val: TrainingItem) => {
     setSelected(val);
     setIsModalVisible(true);
-    navigation.navigate('Start Loader', {goTo: 'Contents'});
+    const query = await getAsyncStorage(asyncStorageKeys.QUERY);
+    await saveAsyncStorage(asyncStorageKeys.QUERY, {
+      ...query,
+      category: val.value,
+    });
+    navigation.navigate(appRoutes.STARTLOADER, {goTo: appRoutes.CONTENTS});
   };
 
   return (
@@ -85,8 +103,6 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     textAlign: 'center',
-    // borderWidth: 2,
-    // borderColor: "blue",
     paddingTop: 60,
   },
   headTexts: {
@@ -105,11 +121,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    // gap: 10,
     marginTop: 12,
     marginBottom: 12,
     padding: 10,
-    // paddingLeft: 30,
     borderRadius: 10,
     borderWidth: 1.5,
     borderColor: '#2A2D74',
@@ -122,14 +136,9 @@ const styles = StyleSheet.create({
   box1: {
     width: '65%',
     paddingLeft: 10,
-
-    // borderWidth: 2,
-    // borderColor: "red",
   },
   box2: {
     width: '35%',
-    // borderWidth: 2,
-    // borderColor: "red",
   },
   aboutCard: {
     elevation: 4,

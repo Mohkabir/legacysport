@@ -4,6 +4,7 @@ import LagacyText from '../../../components/UI/text';
 import {getAsyncStorage, signOut} from '../../../utils';
 import {AppContext} from '../../../context/appContext';
 import {NavigationProp} from '@react-navigation/native';
+import {appRoutes, asyncStorageKeys} from '../../../constants';
 
 interface LoadingContentsProps {
   handleBack: () => void;
@@ -25,16 +26,13 @@ const LoadingContents: React.FC<LoadingContentsProps> = ({
     navigation.navigate(goto);
   };
 
-  useEffect(() => {
-    getContents();
-  }, []);
-
   const getContents = async () => {
-    const token = await getAsyncStorage('token');
+    const token = await getAsyncStorage(asyncStorageKeys.TOKEN);
     console.log('before getting contents, token: ', token);
     try {
+      const query = await getAsyncStorage(asyncStorageKeys.QUERY);
       const response = await fetch(
-        'https://legacy-backend-zmmd.onrender.com/training/allExercise?skillLevel=Beginner&trainingSection=Exercise&day=1',
+        `https://legacy-backend-zmmd.onrender.com/training/allExercise?skillLevel=${query.level}&trainingSection=${query.category}&day=1`,
         {
           method: 'GET',
           headers: {
@@ -56,7 +54,7 @@ const LoadingContents: React.FC<LoadingContentsProps> = ({
                 text: 'Login',
                 onPress: async () => {
                   await signOut();
-                  navigation.navigate('onboarding');
+                  navigation.navigate(appRoutes.ONBOARDING);
                 },
               },
             ],
@@ -91,6 +89,9 @@ const LoadingContents: React.FC<LoadingContentsProps> = ({
     }
   };
 
+  useEffect(() => {
+    getContents();
+  }, []);
   return (
     <View style={styles.container}>
       <View>
@@ -99,7 +100,7 @@ const LoadingContents: React.FC<LoadingContentsProps> = ({
         </Pressable>
 
         <View style={styles.imgBox}>
-          <Image style={styles.imgStyle} source={loaderImg} />
+          <Image source={loaderImg} />
         </View>
 
         <View style={styles.textBox}>

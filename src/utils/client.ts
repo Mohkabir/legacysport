@@ -1,5 +1,6 @@
 import {Alert} from 'react-native';
 import {getAsyncStorage, signOut} from '.';
+import {asyncStorageKeys} from '../constants';
 
 export const apiCall = async (
   endpoint: string,
@@ -15,7 +16,7 @@ export const apiCall = async (
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     } else {
-      const storedToken = await getAsyncStorage('token');
+      const storedToken = await getAsyncStorage(asyncStorageKeys.TOKEN);
       if (storedToken) headers['Authorization'] = `Bearer ${storedToken}`;
     }
 

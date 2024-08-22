@@ -1,30 +1,45 @@
-import React, {createContext, useState} from 'react';
-import {drillsData} from '../components/constant';
+import React, {createContext, useState, ReactNode} from 'react';
+interface Content {
+  id: string;
+  isCompleted?: boolean;
+  title: string;
+  description: string;
+  thumbnail: string;
+  animationUrl: string;
+  duration: {
+    minutes: number;
+    seconds: number;
+  };
+}
 
-const AppContext = createContext();
+interface AppContextType {
+  contents: Content[];
+  currentContents: Content | undefined;
+  setContents: (data: Content[]) => void;
+  updateCurrentContents: (data: Content) => void;
+  handleFinishDrill: (data: Content) => void;
+}
 
-const AppProvider = ({children}) => {
-  const [contents, setContents] = useState(drillsData);
-  const [currentContents, setCurrentContents] = useState();
+interface AppProviderProps {
+  children: ReactNode;
+}
 
-  const updateCurrentContents = data => {
+const AppContext = createContext<AppContextType | undefined>(undefined);
+
+const AppProvider: React.FC<AppProviderProps> = ({children}) => {
+  const [contents, setContents] = useState<Content[]>([]);
+  const [currentContents, setCurrentContents] = useState<Content | undefined>();
+
+  const updateCurrentContents = (data: Content) => {
     setCurrentContents(data);
   };
-  const handleFinishDrill = data => {
-    // const found = contents.map((item) => {
-    //   if (item.id === data.id) {
-    //     item.isCompleted = true;
-    //   }
-    // });
-    // setContents(found);
-    // setContents((prevContents) => {
-    //   return prevContents.map((item) => {
-    //     if (item.id === data.id) {
-    //       return { ...item, isCompleted: true };
-    //     }
-    //     return item;
-    //   });
-    // });
+
+  const handleFinishDrill = (data: Content) => {
+    setContents(prevContents =>
+      prevContents.map(item =>
+        item.id === data.id ? {...item, isCompleted: true} : item,
+      ),
+    );
   };
 
   return (
@@ -36,7 +51,7 @@ const AppProvider = ({children}) => {
         currentContents,
         setContents,
       }}>
-      <>{children}</>
+      {children}
     </AppContext.Provider>
   );
 };

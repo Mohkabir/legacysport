@@ -1,10 +1,9 @@
-import {useEffect, useState} from 'react';
-import {Image, StyleSheet, Pressable, ScrollView, View} from 'react-native';
+import {useState} from 'react';
+import {StyleSheet, ScrollView} from 'react-native';
 import {globalStyle} from '../../../styles';
 import LoadingContents from './loading-contents';
 
 export default function StartLoader({navigation, route}) {
-  const [selected, setSelected] = useState(1);
   const [isModalVisible, setIsModalVisible] = useState(true);
 
   return (

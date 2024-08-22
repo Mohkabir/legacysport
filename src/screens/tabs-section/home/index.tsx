@@ -6,6 +6,7 @@ import {getAsyncStorage} from '../../../utils';
 import {IUserInfo} from '../../../interfaces';
 import AuthGuard from '../../layout/auth-guard';
 import {NavigationProp} from '@react-navigation/native';
+import {appRoutes, asyncStorageKeys} from '../../../constants';
 
 interface WelcomeProps {
   navigation: NavigationProp<any>;
@@ -60,7 +61,7 @@ const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
   const percent = 0;
 
   const gotoTraining = () => {
-    navigation.navigate('Training');
+    navigation.navigate(appRoutes.TRAINING);
   };
 
   useEffect(() => {
@@ -68,7 +69,7 @@ const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
   }, []);
 
   const getStorage = async () => {
-    const user = await getAsyncStorage('user');
+    const user = await getAsyncStorage(asyncStorageKeys.USER);
     setUserInfo(user);
   };
 

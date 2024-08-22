@@ -1,50 +1,68 @@
 import React, {useState} from 'react';
 import {Image, StyleSheet, Pressable, ScrollView, View} from 'react-native';
-import LegacyBtn from '../../components/UI/button';
 import LagacyText from '../../components/UI/text';
-import {globalStyle} from '../../styles';
+import {saveAsyncStorage} from '../../utils';
+import {asyncStorageKeys} from '../../constants';
 
-export default function SkillLevel({handleFinishOnboard}) {
+interface SkillLevelProps {
+  handleFinishOnboard: () => void;
+}
+
+interface SkillLevelItem {
+  title: string;
+  text: string;
+  img: any;
+  tag: number;
+  value: string;
+}
+
+export default function SkillLevel({handleFinishOnboard}: SkillLevelProps) {
   const BeginnerImg1 = require('../../assets/skill1.png');
   const BeginnerImg2 = require('../../assets/skill2.png');
   const BeginnerImg3 = require('../../assets/skill3.png');
   const BeginnerImg4 = require('../../assets/skill4.png');
 
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState<SkillLevelItem | null>(null);
 
-  const skillLevelData = [
+  const skillLevelData: SkillLevelItem[] = [
     {
       title: 'Beginner',
       text: 'Discover the joy of basketball through fun drills and basic skills to build a solid foundation',
       img: BeginnerImg1,
       tag: 0,
+      value: 'Beginner',
     },
     {
       title: 'Intermediate',
       text: 'Level up your game with cool tricks and advanced techniques.',
       img: BeginnerImg2,
       tag: 1,
+      value: 'Intermediate',
     },
     {
       title: 'Expert',
       text: 'Become a basketball prodigy with advanced moves and smart plays.',
       img: BeginnerImg3,
       tag: 2,
+      value: 'Expert',
     },
     {
       title: 'Elite',
       text: 'Unleash your inner superstar as you conquer the court with style.',
       img: BeginnerImg4,
       tag: 3,
+      value: 'Elite',
     },
   ];
 
-  const handleSelectSkill = val => {
+  const handleSelectSkill = async (val: SkillLevelItem) => {
     setSelected(val);
+    await saveAsyncStorage(asyncStorageKeys.QUERY, {level: val.value});
+    handleFinishOnboard();
   };
 
   return (
-    <ScrollView style={{...styles.container}}>
+    <ScrollView style={styles.container}>
       <View style={styles.headTexts}>
         <LagacyText
           color="#2A2D74"
@@ -73,7 +91,6 @@ export default function SkillLevel({handleFinishOnboard}) {
             }}
             onPress={() => {
               handleSelectSkill(item);
-              handleFinishOnboard();
             }}
             key={idx}>
             <View style={styles.box1}>
@@ -94,7 +111,7 @@ export default function SkillLevel({handleFinishOnboard}) {
               />
             </View>
             <View style={styles.box2}>
-              <Image style={styles.img} source={item.img} />
+              <Image source={item.img} />
             </View>
           </Pressable>
         ))}
@@ -105,13 +122,10 @@ export default function SkillLevel({handleFinishOnboard}) {
 
 const styles = StyleSheet.create({
   container: {
-    // marginTop: 30,
     width: '85%',
     textAlign: 'center',
     marginLeft: 'auto',
     marginRight: 'auto',
-    // borderWidth: 2,
-    // borderColor: "blue",
   },
   headTexts: {
     marginTop: 20,
@@ -119,8 +133,6 @@ const styles = StyleSheet.create({
   },
   cardGroup: {
     marginBottom: 15,
-    // borderWidth: 2,
-    // borderColor: "blue",
   },
   card: {
     flexDirection: 'row',
@@ -137,13 +149,9 @@ const styles = StyleSheet.create({
   },
   box1: {
     width: '65%',
-    // borderWidth: 2,
-    // borderColor: "red",
   },
   box2: {
     width: '35%',
-    // borderWidth: 2,
-    // borderColor: "red",
   },
   aboutCard: {
     elevation: 4,

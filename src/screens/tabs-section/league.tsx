@@ -1,13 +1,13 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import {globalStyle} from '../../../styles';
+import {globalStyle} from '../../styles';
 
-const More = () => {
+const League = () => {
   return (
     <View style={{...globalStyle.container}}>
-      <Text>More</Text>
+      <Text>League</Text>
     </View>
   );
 };
 
-export default More;
+export default League;

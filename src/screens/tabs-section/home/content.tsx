@@ -1,18 +1,18 @@
 import React, {useContext} from 'react';
-import {
-  Text,
-  StyleSheet,
-  View,
-  Image,
-  Pressable,
-  ScrollView,
-} from 'react-native';
+import {StyleSheet, View, Image, Pressable, ScrollView} from 'react-native';
 import LagacyText from '../../../components/UI/text';
 import LegacyBtn from '../../../components/UI/button';
 import {AppContext} from '../../../context/appContext';
 import LagacyHeight from '../../../components/UI/height';
+import {appRoutes} from '../../../constants';
 
-const Contents = ({navigation}) => {
+interface ContentsProps {
+  navigation: {
+    navigate: (route: string) => void;
+  };
+}
+
+const Contents: React.FC<ContentsProps> = ({navigation}) => {
   const bgImage = require('../../../assets/gettingStarted3.png');
   const backIcon = require('../../../assets/back.png');
 
@@ -20,13 +20,14 @@ const Contents = ({navigation}) => {
 
   const handleGoBack = () => {
     console.log('traininggggg..');
-    navigation.navigate('Training');
+    navigation.navigate(appRoutes.TRAINING);
   };
 
-  const handleStart = data => {
+  const handleStart = (data: any) => {
     updateCurrentContents(data);
-    navigation.navigate('Start contents');
+    navigation.navigate(appRoutes.STARTCONTENTS);
   };
+
   console.log(drillsData, 'drillsData');
   return (
     <View style={styles.container}>
@@ -62,12 +63,10 @@ const Contents = ({navigation}) => {
               <View style={styles.card2}>
                 <LagacyText
                   value={drill?.displayName}
-                  // weight="bold"
                   styles={{
                     fontSize: 14,
                     marginBottom: 5,
                     color: '#192126',
-                    // color: "red",
                   }}
                 />
                 <LagacyText
@@ -119,7 +118,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.6)',
     width: '100%',
     height: '100%',
-    // opacity: "0.6",
     paddingTop: 60,
     paddingLeft: 20,
     paddingRight: 30,
@@ -131,7 +129,6 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingLeft: 20,
     paddingRight: 30,
-    // zIndex: "2",
   },
   bgTextStyle: {
     alignItems: 'center',
@@ -144,19 +141,16 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 40,
   },
-
   mainContents: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderRadius: 17,
-    // padding: 2,
     padding: 5,
     backgroundColor: '#ffffff',
     marginBottom: 15,
     height: 85,
   },
-
   img_wrap: {
     flex: 0.7,
     borderRadius: 17,
@@ -169,10 +163,7 @@ const styles = StyleSheet.create({
   },
   card2: {
     flex: 2,
-    // width: "40%",
     marginLeft: 10,
-    // borderWidth: 2,
-    // borderColor: "red",
   },
 });
 

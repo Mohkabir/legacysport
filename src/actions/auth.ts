@@ -1,3 +1,4 @@
+import {asyncStorageKeys} from '../constants';
 import {saveAsyncStorage} from '../utils';
 import {handleError} from '../utils/error';
 
@@ -38,7 +39,7 @@ export const getSignedToken = async (userData: any) => {
       //   console.log('\n \n \n \n', '---token---', data?.token, '\n \n \n \n');
       return {error: data?.message || 'An error occurred'};
     } else {
-      await saveAsyncStorage('token', data.token);
+      await saveAsyncStorage(asyncStorageKeys.TOKEN, data.token);
       return {
         data: data,
       };

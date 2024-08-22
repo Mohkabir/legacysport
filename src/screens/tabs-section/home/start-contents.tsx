@@ -1,39 +1,45 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useRef} from 'react';
 import {StyleSheet, View, Image, Pressable} from 'react-native';
 import LagacyText from '../../../components/UI/text';
 import LegacyBtn from '../../../components/UI/button';
 import Video from 'react-native-video';
 import {AppContext} from '../../../context/appContext';
+import {appRoutes} from '../../../constants';
 
-const StartContents = ({navigation}) => {
+interface StartContentsProps {
+  navigation: {
+    navigate: (route: string) => void;
+  };
+}
+
+const StartContents: React.FC<StartContentsProps> = ({navigation}) => {
   const bgImage = require('../../../assets/gettingStarted3.png');
   const backIcon = require('../../../assets/back.png');
 
   const {handleFinishDrill, currentContents, contents} = useContext(AppContext);
-
   const percent = 45;
-  const [countdownToStart, setcountdownToStart] = useState(3);
+  const [countdownToStart, setCountdownToStart] = useState<number>(3);
 
-  const video = React.useRef(null);
-  const [minutes, setMinutes] = useState(
+  const video = useRef<Video>(null);
+  const [minutes, setMinutes] = useState<number>(
     Number(currentContents?.duration?.minutes || 10),
   );
-  const [seconds, setSeconds] = useState(
+  const [seconds, setSeconds] = useState<number>(
     Number(currentContents?.duration?.seconds || 10),
   );
 
-  const [started, setStarted] = useState(false);
-  const [startVideo, setStartVideo] = useState(false);
-  const [isLooping, setIsLooping] = useState(true);
-  const [nextAble, setNextAble] = useState(false);
+  const [started, setStarted] = useState<boolean>(false);
+  const [startVideo, setStartVideo] = useState<boolean>(false);
+  const [isLooping, setIsLooping] = useState<boolean>(true);
+  const [nextAble, setNextAble] = useState<boolean>(false);
 
   const handleGoBack = () => {
-    navigation.navigate('Contents');
+    navigation.navigate(appRoutes.CONTENTS);
   };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setcountdownToStart(prev => {
+      setCountdownToStart(prev => {
         if (prev > 1) {
           return prev - 1;
         } else {
@@ -48,12 +54,9 @@ const StartContents = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    let interval;
+    let interval: NodeJS.Timeout;
     if (started) {
       interval = setInterval(() => {
-        // if (minutes === 0 && seconds === 1) {
-        //   video.current.pauseAsync();
-        // }
         if (minutes === 0 && seconds < 6) {
           setNextAble(true);
         }
@@ -73,7 +76,7 @@ const StartContents = ({navigation}) => {
       }, 1000);
     }
     return () => clearInterval(interval);
-  });
+  }, [started, minutes, seconds]);
 
   return (
     <View style={styles.container}>
@@ -93,16 +96,10 @@ const StartContents = ({navigation}) => {
       )}
 
       <View style={styles.blueBG}>
-        {/* <Image style={styles.bgImgStyle} source={bgImage} /> */}
         <Video
           ref={video}
           style={styles.video}
-          // source={currentContents?.videoUrl}
-          // source={require('../../../assets/video/ball_slaps1.mp4')}
-          // source="https://res.cloudinary.com/dmvvb4t5w/video/upload/v1715856378/ball_slaps1_cnexsu.mp4"
-          source={{
-            uri: currentContents?.videoUrl,
-          }}
+          source={{uri: currentContents?.videoUrl}}
           paused={!startVideo}
           repeat={isLooping}
         />
@@ -173,10 +170,6 @@ const styles = StyleSheet.create({
     zIndex: 4,
     justifyContent: 'center',
     alignItems: 'center',
-
-    // paddingTop: 60,
-    // paddingLeft: 20,
-    // paddingRight: 30,
   },
   coundownNumber: {
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -191,7 +184,6 @@ const styles = StyleSheet.create({
   blueBG: {
     flex: 0.6,
     position: 'relative',
-    // borderWidth: 2,
     overflow: 'hidden',
     backgroundColor: '#2A2D74',
   },
@@ -199,10 +191,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-
   bgTextStyleWrap: {
     position: 'absolute',
-    // backgroundColor: "#000000",
     width: '100%',
     paddingTop: 60,
     paddingLeft: 20,
@@ -212,15 +202,11 @@ const styles = StyleSheet.create({
     flex: 0.4,
     backgroundColor: '#ffffff',
     marginTop: -27,
-    // borderWidth: 2,
-    // borderColor: "red",
     borderRadius: 20,
     padding: 20,
     paddingTop: 40,
-    // paddingBottom: 140,
     marginBottom: 25,
   },
-
   mainContents: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -234,8 +220,6 @@ const styles = StyleSheet.create({
     width: '40%',
   },
   video: {
-    // borderWidth: 2,
-    // borderColor: "red",
     width: '205%',
     height: '100%',
     alignSelf: 'center',

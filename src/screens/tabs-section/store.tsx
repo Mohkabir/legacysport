@@ -1,13 +1,13 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import {globalStyle} from '../../../styles';
+import {globalStyle} from '../../styles';
 
-const More = () => {
+const Store = () => {
   return (
     <View style={{...globalStyle.container}}>
-      <Text>More</Text>
+      <Text>Store</Text>
     </View>
   );
 };
 
-export default More;
+export default Store;
