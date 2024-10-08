@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, TextStyle} from 'react-native';
 
 interface LagacyTextProps {
-  value: string;
+  value: string | number;
   styles?: TextStyle;
   color?: string;
   size?: 'lg' | 'md' | 'sm';

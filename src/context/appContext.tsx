@@ -1,4 +1,5 @@
 import React, {createContext, useState, ReactNode} from 'react';
+import {IUserInfo} from '../interfaces';
 interface Content {
   id: string;
   isCompleted?: boolean;
@@ -18,6 +19,8 @@ interface AppContextType {
   setContents: (data: Content[]) => void;
   updateCurrentContents: (data: Content) => void;
   handleFinishDrill: (data: Content) => void;
+  userInfo: IUserInfo | null;
+  setUserInfo: (data: IUserInfo | null) => void;
 }
 
 interface AppProviderProps {
@@ -29,11 +32,15 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 const AppProvider: React.FC<AppProviderProps> = ({children}) => {
   const [contents, setContents] = useState<Content[]>([]);
   const [currentContents, setCurrentContents] = useState<Content | undefined>();
+  const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
 
   const updateCurrentContents = (data: Content) => {
     setCurrentContents(data);
   };
 
+  // const updateUserInformation = (data: IUserInfo) => {
+  //   setUserInfo(data);
+  // };
   const handleFinishDrill = (data: Content) => {
     setContents(prevContents =>
       prevContents.map(item =>
@@ -50,6 +57,8 @@ const AppProvider: React.FC<AppProviderProps> = ({children}) => {
         updateCurrentContents,
         currentContents,
         setContents,
+        userInfo,
+        setUserInfo,
       }}>
       {children}
     </AppContext.Provider>

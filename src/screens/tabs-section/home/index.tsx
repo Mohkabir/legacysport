@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {StyleSheet, View, Image} from 'react-native';
 import LagacyText from '../../../components/UI/text';
 import LegacyBtn from '../../../components/UI/button';
 import {getAsyncStorage} from '../../../utils';
-import {IUserInfo} from '../../../interfaces';
 import AuthGuard from '../../layout/auth-guard';
 import {NavigationProp} from '@react-navigation/native';
 import {appRoutes, asyncStorageKeys} from '../../../constants';
+import {AppContext} from '../../../context/appContext';
 
 interface WelcomeProps {
   navigation: NavigationProp<any>;
@@ -22,7 +22,8 @@ interface CardProps {
 const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
   const fireIcon = require('../../../assets/fire.png');
   const coinIcon = require('../../../assets/coin.png');
-  const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
+  // const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
+  const {userInfo, setUserInfo} = useContext(AppContext);
 
   const Card: React.FC<CardProps> = ({icon, text1, text2, sm}) => {
     return (
@@ -71,9 +72,9 @@ const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
   const getStorage = async () => {
     const user = await getAsyncStorage(asyncStorageKeys.USER);
     setUserInfo(user);
+    // setUserInfo(user);
   };
 
-  console.log(userInfo, 'userInfo');
   return (
     <AuthGuard navigation={navigation}>
       <View style={styles.container}>

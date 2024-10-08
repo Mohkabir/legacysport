@@ -27,6 +27,8 @@ interface IAppRoutes {
   STORE: string;
   LEAGUE: string;
   MORE: string;
+  RULES: string;
+  DETAILSRULE: string;
 }
 
 export const appRoutes: IAppRoutes = {
@@ -37,9 +39,11 @@ export const appRoutes: IAppRoutes = {
   STARTLOADER: 'Start Loader',
   CONTENTS: 'Contents',
   STARTCONTENTS: 'Start contents',
+  DETAILSRULE: 'Details Rule',
   // TABS ROUTE
   HOME: 'Home',
   STORE: 'store',
   LEAGUE: 'league',
   MORE: 'more',
+  RULES: 'rules',
 };
