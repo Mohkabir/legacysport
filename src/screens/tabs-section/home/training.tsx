@@ -5,6 +5,7 @@ import {globalStyle} from '../../../styles';
 import GoBack from '../../../components/UI/go-back';
 import {appRoutes, asyncStorageKeys} from '../../../constants';
 import {getAsyncStorage, saveAsyncStorage} from '../../../utils';
+import LagacyHeight from '../../../components/UI/height';
 
 const BeginnerImg1 = require('../../../assets/skill1.png');
 const BeginnerImg2 = require('../../../assets/skill2.png');
@@ -62,6 +63,7 @@ export default function Training({navigation}: {navigation: any}) {
     <ScrollView style={{...globalStyle.container, ...styles.container}}>
       <View style={styles.wrap}>
         <GoBack title="Training" />
+        <LagacyHeight height={60} />
       </View>
       <View style={styles.cardGroup}>
         {trainingData.map((item, idx) => (

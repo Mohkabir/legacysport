@@ -3,11 +3,13 @@ import {StyleSheet, View} from 'react-native';
 import {globalStyle} from '../../../styles';
 import Cards from './cards';
 import GoBack from '../../../components/UI/go-back';
+import LagacyHeight from '../../../components/UI/height';
 
 const Rules = () => {
   return (
     <View style={{...globalStyle.container}}>
       <GoBack title="Rules" />
+      <LagacyHeight height={60} />
       <View style={styles.body}>
         <View style={styles.wrap}>
           <Cards />
@@ -33,6 +35,8 @@ const styles = StyleSheet.create({
   body: {
     marginTop: 0,
     marginBottom: 20,
+    // paddingTop: 65,
+
     flex: 1,
     backgroundColor: '#F4F6FF',
   },

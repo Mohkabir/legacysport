@@ -5,6 +5,7 @@ import LagacyText from '../../../components/UI/text';
 import {AppContext} from '../../../context/appContext';
 import Cards from './cards';
 import GoBack from '../../../components/UI/go-back';
+import LagacyHeight from '../../../components/UI/height';
 const fireIcon = require('../../../assets/fire.png');
 
 const More = () => {
@@ -13,6 +14,7 @@ const More = () => {
   return (
     <View style={{...globalStyle.container}}>
       <GoBack title="More" />
+      <LagacyHeight height={60} />
       <View style={styles.body}>
         <View style={styles.wrap}>
           <View style={styles.profile}>

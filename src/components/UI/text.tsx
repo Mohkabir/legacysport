@@ -23,6 +23,7 @@ const LagacyText: React.FC<LagacyTextProps> = ({
         fontSize: size === 'lg' ? 40 : size === 'md' ? 30 : 14,
         fontWeight:
           weight === 'bold' ? '700' : weight === 'semi-bold' ? '600' : '400',
+        flexWrap: 'wrap',
         ...styles,
       }}>
       {value}

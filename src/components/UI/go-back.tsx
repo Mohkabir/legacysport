@@ -9,11 +9,13 @@ const GoBack = ({title}: {title: string}) => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.wrap}>
-      <Pressable onPress={() => navigation.goBack()} style={styles.back}>
-        <Image source={BackIcon} />
-      </Pressable>
-      <Text style={styles.title}>{title}</Text>
+    <View style={styles.bg}>
+      <View style={styles.wrap}>
+        <Pressable onPress={() => navigation.goBack()} style={styles.back}>
+          <Image source={BackIcon} />
+        </Pressable>
+        <Text style={styles.title}>{title}</Text>
+      </View>
     </View>
   );
 };
@@ -21,9 +23,13 @@ const GoBack = ({title}: {title: string}) => {
 const styles = StyleSheet.create({
   back: {
     position: 'absolute',
-    top: 0,
+    top: 13,
     left: 0,
     zIndex: 1,
+
+    width: 60,
+    // paddingTop: 10,
+    // paddingBottom: 10,
   },
   title: {
     fontSize: 20,
@@ -31,12 +37,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
-  wrap: {
-    marginBottom: 20,
+  bg: {
+    backgroundColor: '#ffffff',
     // borderColor: 'red',
     // borderWidth: 1,
+    position: 'absolute',
+    top: 0,
+    zIndex: 10,
+    width: '100%',
+  },
+  wrap: {
+    paddingTop: 15,
+    paddingBottom: 15,
     width: '90%',
     margin: 'auto',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
 });
 
